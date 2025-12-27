@@ -20,19 +20,23 @@ Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 - **Cost Driver Breakdown**: Stacked chart visualizing cost components
 - **Sensitivity Simulation**: Interactive sliders for energy/customs impact analysis
 - **Risk Indicators**: Traffic-light system for competitor risk assessment
+- **Scenario Persistence**: URL params + local storage for shareable what-if scenarios
+- **CSV Export**: Download adjusted margin results for further analysis
+- **Resilient Data Loading**: Server-side CSV parsing with validation and error boundaries
 
 ## Project Structure
 
 ```
-/app              - Next.js app router pages
+/app              - Next.js app router pages (loading/error UI included)
 /components       - React components (charts, sliders, risk matrix)
-/utils            - Utility functions (CSV parsing, calculations)
+/lib              - Server-side data loading + validation
+/utils            - Utility functions (formatting, calculations, exports)
 /public/data      - Mock CSV data files
 ```
 
 ## Tech Stack
 
-- **Next.js 14+** - React framework with App Router
+- **Next.js** - React framework with App Router
 - **TypeScript** - Type-safe development
 - **Tailwind CSS** - Utility-first styling
 - **Recharts** - Chart visualizations

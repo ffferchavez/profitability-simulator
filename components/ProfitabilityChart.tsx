@@ -1,7 +1,8 @@
 'use client';
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Product, calculateContributionMargin, calculateAdjustedContributionMargin } from '@/utils/calculations';
+import { Product, buildMarginSeries, sumMargins } from '@/utils/calculations';
+import { formatEuro, formatEuroCompactK } from '@/utils/format';
 
 interface ProfitabilityChartProps {
   products: Product[];
@@ -14,24 +15,26 @@ export default function ProfitabilityChart({
   energyFactor = 0,
   customsFactor = 0,
 }: ProfitabilityChartProps) {
-  const data = products.map((product) => {
-    const margin = energyFactor !== 0 || customsFactor !== 0
-      ? calculateAdjustedContributionMargin(product, energyFactor, customsFactor)
-      : calculateContributionMargin(product);
-    
-    return {
-      product: product.product,
-      margin: Math.round(margin),
-    };
-  });
-
-  const totalMargin = data.reduce((sum, item) => sum + item.margin, 0);
+  const data = buildMarginSeries(products, energyFactor, customsFactor);
+  const totalMargin = sumMargins(data);
   const profitableCount = data.filter(item => item.margin > 0).length;
   const lossMakingCount = data.filter(item => item.margin < 0).length;
 
-  const formatEuro = (value: number) => {
-    return `€${Math.abs(value).toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
-  };
+  if (data.length === 0) {
+    return (
+      <div className="w-full h-full p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+            Profitability Overview
+          </h2>
+          <p className="text-xs text-gray-500">Contribution margin per product</p>
+        </div>
+        <div className="h-[280px] border border-dashed border-gray-200 rounded-md flex items-center justify-center text-sm text-gray-500">
+          No product data available.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
@@ -71,7 +74,7 @@ export default function ProfitabilityChart({
             stroke="#6b7280"
             tick={{ fill: '#6b7280', fontSize: 11, fontWeight: 500 }}
             axisLine={{ stroke: '#d1d5db' }}
-            tickFormatter={(value) => `€${(value / 1000).toFixed(0)}k`}
+            tickFormatter={(value) => formatEuroCompactK(value as number)}
           />
           <Tooltip
             formatter={(value: number) => [formatEuro(value), 'Contribution Margin']}

@@ -7,6 +7,20 @@ interface RiskMatrixProps {
 }
 
 export default function RiskMatrix({ risk }: RiskMatrixProps) {
+  if (risk.length === 0) {
+    return (
+      <div className="w-full h-full p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>Competitor Risk Indicators</h2>
+          <p className="text-xs text-gray-500">Chinese competitor pressure assessment</p>
+        </div>
+        <div className="h-[220px] border border-dashed border-gray-200 rounded-md flex items-center justify-center text-sm text-gray-500">
+          No risk data available.
+        </div>
+      </div>
+    );
+  }
+
   const getRiskColor = (score: number) => {
     if (score >= 0.7) return { 
       bg: 'bg-red-500', 

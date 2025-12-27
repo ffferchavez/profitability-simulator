@@ -14,6 +14,18 @@ export interface CompetitorRisk {
   risk_score: number;
 }
 
+export interface MarginDataPoint {
+  product: string;
+  margin: number;
+}
+
+export const FACTOR_RANGE = {
+  min: -0.5,
+  max: 1,
+};
+
+export const FACTOR_STEP = 0.05;
+
 export function calculateContributionMargin(product: Product): number {
   return (
     product.revenue -
@@ -23,6 +35,17 @@ export function calculateContributionMargin(product: Product): number {
       product.labor +
       product.other_costs)
   );
+}
+
+export function clampFactor(value: number): number {
+  return Math.min(FACTOR_RANGE.max, Math.max(FACTOR_RANGE.min, value));
+}
+
+export function parseFactor(value: string | number | null | undefined): number | null {
+  if (value === null || value === undefined || value === '') return null;
+  const parsed = typeof value === 'number' ? value : Number(value);
+  if (!Number.isFinite(parsed)) return null;
+  return clampFactor(parsed);
 }
 
 export function calculateAdjustedContributionMargin(
@@ -43,3 +66,23 @@ export function calculateAdjustedContributionMargin(
   );
 }
 
+export function buildMarginSeries(
+  products: Product[],
+  energyFactor = 0,
+  customsFactor = 0
+): MarginDataPoint[] {
+  return products.map((product) => {
+    const margin = energyFactor !== 0 || customsFactor !== 0
+      ? calculateAdjustedContributionMargin(product, energyFactor, customsFactor)
+      : calculateContributionMargin(product);
+
+    return {
+      product: product.product,
+      margin: Math.round(margin),
+    };
+  });
+}
+
+export function sumMargins(series: MarginDataPoint[]): number {
+  return series.reduce((sum, item) => sum + item.margin, 0);
+}
