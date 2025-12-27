@@ -1,0 +1,11 @@
+product,china_competitor_presence,risk_score
+A100,high,0.8
+B300,medium,0.5
+C500,low,0.3
+D900,high,0.75
+E200,medium,0.45
+F400,high,0.85
+G600,low,0.25
+H800,high,0.9
+I100,medium,0.55
+J700,low,0.35
