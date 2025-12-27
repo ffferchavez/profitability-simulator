@@ -10,11 +10,12 @@ Profitability Cockpit is a real-time dashboard prototype that helps manufacturin
 - Spot competitive exposure by product to prioritize mitigation.
 
 ## Demo Script
-1. Start with the header KPIs to frame revenue, margin, and margin percentage at a glance.
-2. Walk through the Profitability Overview chart and call out profitable vs loss-making products.
-3. Switch to the Cost Driver Breakdown to show where costs are concentrated.
-4. Use the Sensitivity Simulation sliders to show the impact of energy and customs changes.
-5. End with the Risk Matrix to discuss exposure to competitor pressure.
+1. Start at the login page and use **Demo Login** to enter the dashboard.
+2. Review the header KPIs to frame revenue, margin, and margin percentage at a glance.
+3. Walk through the Profitability Overview chart and call out profitable vs loss-making products.
+4. Switch to the Cost Driver Breakdown to show where costs are concentrated.
+5. Use the Sensitivity Simulation sliders to show the impact of energy and customs changes.
+6. End with the Risk Matrix to discuss exposure to competitor pressure.
 
 ## Future Enhancements
 - Live data connectors (ERP, MES, finance systems).

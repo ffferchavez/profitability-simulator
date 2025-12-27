@@ -2,7 +2,7 @@
 
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { Product, buildMarginSeries, sumMargins } from '@/utils/calculations';
-import { formatEuro, formatEuroCompactK } from '@/utils/format';
+import { useI18n } from '@/components/I18nProvider';
 
 interface ProfitabilityChartProps {
   products: Product[];
@@ -15,22 +15,25 @@ export default function ProfitabilityChart({
   energyFactor = 0,
   customsFactor = 0,
 }: ProfitabilityChartProps) {
+  const { messages, formatters } = useI18n();
   const data = buildMarginSeries(products, energyFactor, customsFactor);
   const totalMargin = sumMargins(data);
   const profitableCount = data.filter(item => item.margin > 0).length;
   const lossMakingCount = data.filter(item => item.margin < 0).length;
+  const productLabel = (count: number) =>
+    count === 1 ? messages.common.product : messages.common.products;
 
   if (data.length === 0) {
     return (
       <div className="w-full h-full p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
         <div className="mb-4">
           <h2 className="text-lg font-semibold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
-            Profitability Overview
+            {messages.profitability.title}
           </h2>
-          <p className="text-xs text-gray-500">Contribution margin per product</p>
+          <p className="text-sm text-gray-500">{messages.profitability.subtitle}</p>
         </div>
         <div className="h-[280px] border border-dashed border-gray-200 rounded-md flex items-center justify-center text-sm text-gray-500">
-          No product data available.
+          {messages.profitability.noData}
         </div>
       </div>
     );
@@ -39,25 +42,31 @@ export default function ProfitabilityChart({
   return (
     <div className="w-full h-full p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
       <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>Profitability Overview</h2>
-        <p className="text-xs text-gray-500">Contribution margin per product</p>
+        <h2 className="text-lg font-semibold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+          {messages.profitability.title}
+        </h2>
+        <p className="text-sm text-gray-500">{messages.profitability.subtitle}</p>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-2 mb-4">
         <div className="bg-gray-50 rounded-md p-2.5 border border-gray-200">
-          <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Total Margin</div>
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-0.5">{messages.profitability.totalMargin}</div>
           <div className={`text-base font-bold ${totalMargin >= 0 ? 'text-gray-900' : 'text-gray-900'}`} style={{ fontFamily: 'var(--font-space-grotesk)' }}>
-            {formatEuro(totalMargin)}
+            {formatters.currency(totalMargin)}
           </div>
         </div>
         <div className="bg-gray-50 rounded-md p-2.5 border border-gray-200">
-          <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Profitable</div>
-          <div className="text-base font-bold text-gray-900" style={{ fontFamily: 'var(--font-space-grotesk)' }}>{profitableCount} products</div>
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-0.5">{messages.profitability.profitable}</div>
+          <div className="text-base font-bold text-gray-900" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+            {profitableCount} {productLabel(profitableCount)}
+          </div>
         </div>
         <div className="bg-gray-50 rounded-md p-2.5 border border-gray-200">
-          <div className="text-[10px] font-medium text-gray-500 uppercase tracking-wide mb-0.5">Loss-making</div>
-          <div className="text-base font-bold text-gray-900" style={{ fontFamily: 'var(--font-space-grotesk)' }}>{lossMakingCount} products</div>
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-0.5">{messages.profitability.lossMaking}</div>
+          <div className="text-base font-bold text-gray-900" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+            {lossMakingCount} {productLabel(lossMakingCount)}
+          </div>
         </div>
       </div>
 
@@ -74,10 +83,10 @@ export default function ProfitabilityChart({
             stroke="#6b7280"
             tick={{ fill: '#6b7280', fontSize: 11, fontWeight: 500 }}
             axisLine={{ stroke: '#d1d5db' }}
-            tickFormatter={(value) => formatEuroCompactK(value as number)}
+            tickFormatter={(value) => formatters.currencyCompact(value as number)}
           />
           <Tooltip
-            formatter={(value: number) => [formatEuro(value), 'Contribution Margin']}
+            formatter={(value: number) => [formatters.currency(value), messages.profitability.tooltipLabel]}
             contentStyle={{ 
               backgroundColor: '#fff', 
               border: '1px solid #e5e7eb', 
@@ -97,14 +106,14 @@ export default function ProfitabilityChart({
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-      <div className="mt-3 flex gap-4 text-xs">
+      <div className="mt-3 flex gap-4 text-sm">
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 bg-teal-500 rounded"></div>
-          <span className="font-medium text-gray-600">Profitable</span>
+          <span className="font-medium text-gray-600">{messages.profitability.legendProfitable}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 bg-gray-900 rounded"></div>
-          <span className="font-medium text-gray-600">Loss-making</span>
+          <span className="font-medium text-gray-600">{messages.profitability.legendLossMaking}</span>
         </div>
       </div>
     </div>

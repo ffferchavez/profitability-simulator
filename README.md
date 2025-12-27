@@ -12,7 +12,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
+Open [http://localhost:3000](http://localhost:3000) to view the login page, then use **Demo Login** to access the dashboard at `/dashboard`.
 
 ## Features
 
@@ -23,6 +23,8 @@ Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 - **Scenario Persistence**: URL params + local storage for shareable what-if scenarios
 - **CSV Export**: Download adjusted margin results for further analysis
 - **Resilient Data Loading**: Server-side CSV parsing with validation and error boundaries
+- **Multilanguage UI**: English, German, and Spanish labels
+- **Currency Toggle**: Switch between EUR and USD displays
 
 ## Project Structure
 
