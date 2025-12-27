@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { CompetitorRisk, Product, calculateAdjustedContributionMargin, calculateContributionMargin, clampFactor, FACTOR_RANGE } from '@/utils/calculations';
 import { createFormatters } from '@/utils/format';
 import { downloadCsv } from '@/utils/exportCsv';
@@ -175,6 +176,12 @@ export default function DashboardClient({
     count === 1 ? messages.dataNotice.productRow : messages.dataNotice.productRows;
   const riskRowLabel = (count: number) =>
     count === 1 ? messages.dataNotice.riskRow : messages.dataNotice.riskRows;
+  const loginHref = () => {
+    const params = new URLSearchParams();
+    if (locale !== DEFAULT_LOCALE) params.set('lang', locale);
+    if (currency !== DEFAULT_CURRENCY) params.set('currency', currency);
+    return `/${params.toString() ? `?${params.toString()}` : ''}`;
+  };
 
   return (
     <I18nProvider locale={locale} messages={messages} formatters={formatters}>
@@ -202,6 +209,13 @@ export default function DashboardClient({
                     >
                       {messages.header.exportCsv}
                     </button>
+                    <Link
+                      href={loginHref()}
+                      className="lg:hidden text-sm font-semibold text-slate-600 bg-white border border-slate-200 px-3.5 py-2 rounded-md hover:bg-slate-50 transition-colors"
+                      aria-label={messages.header.logout}
+                    >
+                      {messages.header.logout}
+                    </Link>
                     <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-md">
                       <label className="text-sm font-medium text-gray-600 uppercase tracking-wide" htmlFor="language-select">
                         {messages.header.languageLabel}
@@ -309,6 +323,15 @@ export default function DashboardClient({
           </div>
 
           <aside className="w-full lg:w-80 xl:w-[22rem] bg-white border-t lg:border-t-0 lg:border-l border-gray-200 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto shadow-sm">
+            <div className="hidden lg:flex items-center justify-end border-b border-gray-100 px-5 py-3 bg-white/95 backdrop-blur">
+              <Link
+                href={loginHref()}
+                className="text-sm font-semibold text-slate-600 bg-white border border-slate-200 px-3.5 py-2 rounded-md hover:bg-slate-50 transition-colors"
+                aria-label={messages.header.logout}
+              >
+                {messages.header.logout}
+              </Link>
+            </div>
             <div className="p-5">
               <SensitivitySlider
                 products={products}

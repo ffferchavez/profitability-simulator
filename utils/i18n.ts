@@ -10,6 +10,7 @@ export interface Messages {
     exportCsv: string;
     currencyLabel: string;
     languageLabel: string;
+    logout: string;
   };
   metrics: {
     totalRevenue: string;
@@ -118,6 +119,7 @@ const MESSAGES: Record<Locale, Messages> = {
       exportCsv: 'Export CSV',
       currencyLabel: 'Currency',
       languageLabel: 'Language',
+      logout: 'Log out',
     },
     metrics: {
       totalRevenue: 'Total Revenue',
@@ -224,6 +226,7 @@ const MESSAGES: Record<Locale, Messages> = {
       exportCsv: 'CSV exportieren',
       currencyLabel: 'Währung',
       languageLabel: 'Sprache',
+      logout: 'Abmelden',
     },
     metrics: {
       totalRevenue: 'Gesamtumsatz',
@@ -330,6 +333,7 @@ const MESSAGES: Record<Locale, Messages> = {
       exportCsv: 'Exportar CSV',
       currencyLabel: 'Moneda',
       languageLabel: 'Idioma',
+      logout: 'Cerrar sesión',
     },
     metrics: {
       totalRevenue: 'Ingresos totales',
